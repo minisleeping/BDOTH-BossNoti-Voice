@@ -4,6 +4,8 @@ from discord import Game
 from discord.ext.commands import Bot
 import datetime
 import os
+import pytz
+tz = pytz.timezone('Asia/Bangkok')
 
 datename = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 kttime = [[10,18],[14],[18],[0,14],[10,18],[14],[14]]
@@ -17,6 +19,8 @@ voice_channel = ''
 
 worldbossmsg = ''
 client = discord.Client()
+
+checkplaying = 0
 
 @client.event
 async def on_ready():
@@ -38,79 +42,104 @@ async def on_message(message):
 	global ktnextdate
 	global worldbossmsg
 	global voice_channel
-	now1 = datetime.datetime.now()
+	global checkplaying
+	user = message.author
+	now1 = datetime.datetime.now(tz)
 	datenow = now1.strftime("%A")
-	if message.content == '!playnoti':
-		voice_channel = message.author.voice.voice_channel
-		aa=await client.send_message(message.channel, 'Set voice_channel = ' + str(voice_channel))
-		await asyncio.sleep(3)
-		await client.delete_message(aa)
-		await client.delete_message(message)
-	elif message.content == '!แตกแน่นอน':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('brake.m4a')
-		ktplayer.start()
-		await asyncio.sleep(10)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!fail':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('fail.mp3')
-		ktplayer.start()
-		await asyncio.sleep(15)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!nani':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('nani.m4a')
-		ktplayer.start()
-		await asyncio.sleep(4)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!omea':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('omea.m4a')
-		ktplayer.start()
-		await asyncio.sleep(5)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!isas':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('isas.m4a')
-		ktplayer.start()
-		await asyncio.sleep(5)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!999':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('191.m4a')
-		ktplayer.start()
-		await asyncio.sleep(5)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!555':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('555.m4a')
-		ktplayer.start()
-		await asyncio.sleep(15)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!tuna90fs':
-		await client.delete_message(message)
-		voice = await client.join_voice_channel(voice_channel)
-		ktplayer = voice.create_ffmpeg_player('TunaBreak.mp3')
-		ktplayer.start()
-		await asyncio.sleep(23)
-		ktplayer.stop()
-		await voice.disconnect()
-	elif message.content == '!bw':
+	if checkplaying == 0:
+		if message.content == '!playnoti':
+			checkplaying = 1
+			voice_channel = message.author.voice.voice_channel
+			aa=await client.send_message(message.channel, 'Set voice_channel = ' + str(voice_channel))
+			await asyncio.sleep(3)
+			await client.delete_message(aa)
+			await client.delete_message(message)
+			checkplaying = 0
+		elif message.content == '!แตกแน่นอน':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('brake.m4a')
+			ktplayer.start()
+			await asyncio.sleep(10)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+		elif message.content == '!fail':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('fail.mp3')
+			ktplayer.start()
+			await asyncio.sleep(15)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+		elif message.content == '!nani':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('nani.m4a')
+			ktplayer.start()
+			await asyncio.sleep(4)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+		elif message.content == '!omea':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('omea.m4a')
+			ktplayer.start()
+			await asyncio.sleep(5)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+		elif message.content == '!isas':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('isas.m4a')
+			ktplayer.start()
+			await asyncio.sleep(5)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+		elif message.content == '!999':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('191.m4a')
+			ktplayer.start()
+			await asyncio.sleep(5)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+		elif message.content == '!555':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('555.m4a')
+			ktplayer.start()
+			await asyncio.sleep(15)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+		elif message.content == '!tuna90fs':
+			checkplaying = 1
+			await client.delete_message(message)
+			voice = await client.join_voice_channel(voice_channel)
+			ktplayer = voice.create_ffmpeg_player('TunaBreak.mp3')
+			ktplayer.start()
+			await asyncio.sleep(23)
+			ktplayer.stop()
+			await voice.disconnect()
+			checkplaying = 0
+	else:
+		if message.content == '!playnoti' or message.content == '!แตกแน่นอน'or message.content == '!fail'or message.content == '!nani' or message.content == '!omea' or message.content == '!isas' or message.content == '!999' or message.content == '!555' or message.content == '!tuna90fs':
+			msg = await client.send_message(message.channel, '{} ใจเย็นสิ รอบอทออกจากห้องก่อนค่อยกด'.format(message.author.mention))
+
+	if message.content == '!bw':
 		embed = discord.Embed()
 		embed.set_image(url='https://cdn.discordapp.com/attachments/394466092845760512/454548640279560192/unknown.png')
 		if ktnextdate == datenow:
@@ -150,12 +179,13 @@ async def on_message(message):
 
 		worldbossmsg = await client.send_message(message.channel, 'Kzarka  next ' + str(kznext) + ':01 ' + kzdd + ' (' +str(kzh)+'h'+str(kzm)+'m)'+'\n'+ 'Kutum  next ' + str(ktnext) + ':01 ' + ktdd + ' (' +str(kth)+'h'+str(ktm)+'m)', embed=embed)
 		await client.delete_message(message)
-	elif message.content == '!dmsg':
+	if message.content == '!dmsg':
 		await client.delete_message(worldbossmsg)
 		await client.delete_message(message)
-	elif message.content == '!chelp':
+	if message.content == '!chelp':
 		await client.delete_message(message)
 		await client.send_message(message.channel, '!bw = ดูเวลาบอสเกิด\n!บอสกิล [บอสอะไรบ้าง] [กี่ใบ] [กี่โมง] [เพิ่มเติมจะใส่ไม่ใส่ก็ได้]\n!แตกแน่นอน\n!fail\n!nani\n!omea\n!isas\n!999\n!555')
+	
 	st = message.content.split()
 	if len(st) == 4:
 		com = st[0]
@@ -186,9 +216,10 @@ async def my_background_task():
 	global ktnext
 	global ktnextdate
 	global voice_channel
+	global checkplaying
 	await client.wait_until_ready()
 	while not client.is_closed:
-		now = datetime.datetime.now()
+		now = datetime.datetime.now(tz)
 		date = now.strftime("%A")
 		hour = (now.hour)
 		mine = (now.minute)
@@ -274,7 +305,7 @@ async def my_background_task():
 
 
 		while  startlp == 0:
-			now = datetime.datetime.now()
+			now = datetime.datetime.now(tz)
 			date = now.strftime("%A")
 			hour = (now.hour)
 			mine = (now.minute)
@@ -330,6 +361,7 @@ async def my_background_task():
 			if ktnextdate == date or (ktnext == 0 and checkmidnight == ktnextdate):
 				if (int(hour) == ktnext-1 or int(hour)-24 == ktnext-1) and int(mine) == 30:
 					print('Kt next ' + str(ktnext) + ' ' + ktnextdate + ' 30min Noti')
+					checkplaying = 1
 					voice = await client.join_voice_channel(voice_channel)
 					ktplayer = voice.create_ffmpeg_player('kt30.m4a')
 					ktplayer.start()
@@ -337,8 +369,10 @@ async def my_background_task():
 					ktplayer.stop()
 					await voice.disconnect()
 					startlp = 1
+					checkplaying = 0
 				elif (int(hour) == ktnext-1 or int(hour)-24 == ktnext-1) and int(mine) == 45:
 					print('Kt next ' + str(ktnext) + ' ' + ktnextdate + ' 15min Noti')
+					checkplaying = 1
 					voice = await client.join_voice_channel(voice_channel)
 					ktplayer = voice.create_ffmpeg_player('kt15.m4a')
 					ktplayer.start()
@@ -346,8 +380,10 @@ async def my_background_task():
 					ktplayer.stop()
 					await voice.disconnect()
 					startlp = 1
+					checkplaying = 0
 				elif int(hour) == ktnext and int(mine) == 0:
 					print('Kt next ' + str(ktnext) + ' ' + ktnextdate + ' Spawn')
+					checkplaying = 1
 					voice = await client.join_voice_channel(voice_channel)
 					kzplayer = voice.create_ffmpeg_player('ktb.m4a')
 					kzplayer.start()
@@ -355,9 +391,11 @@ async def my_background_task():
 					kzplayer.stop()
 					await voice.disconnect()
 					startlp = 1
+					checkplaying = 0
 			if kznextdate == date or (kznext == 0 and checkmidnight == kznextdate):
 				if (int(hour) == kznext-1 or int(hour)-24 == kznext-1) and int(mine) == 30:
 					print('Kz next ' + str(kznext) + ' ' + kznextdate + ' 30min Noti')
+					checkplaying = 1
 					voice = await client.join_voice_channel(voice_channel)
 					kzplayer = voice.create_ffmpeg_player('kz30.m4a')
 					kzplayer.start()
@@ -365,8 +403,10 @@ async def my_background_task():
 					kzplayer.stop()
 					await voice.disconnect()
 					startlp = 1
+					checkplaying = 0
 				elif (int(hour) == kznext-1 or int(hour)-24 == kznext-1) and int(mine) == 45:
 					print('Kz next ' + str(kznext) + ' ' + kznextdate + ' 15min Noti')
+					checkplaying = 1
 					voice = await client.join_voice_channel(voice_channel)
 					kzplayer = voice.create_ffmpeg_player('kz15.m4a')
 					kzplayer.start()
@@ -374,8 +414,10 @@ async def my_background_task():
 					kzplayer.stop()
 					await voice.disconnect()
 					startlp = 1
+					checkplaying = 0
 				elif int(hour) == kznext and int(mine) == 0:
 					print('Kz next ' + str(kznext) + ' ' + kznextdate + ' Spawn')
+					checkplaying = 1
 					voice = await client.join_voice_channel(voice_channel)
 					kzplayer = voice.create_ffmpeg_player('kzb.m4a')
 					kzplayer.start()
@@ -383,8 +425,10 @@ async def my_background_task():
 					kzplayer.stop()
 					await voice.disconnect()
 					startlp = 1
+					checkplaying = 0
 			if int(hour) == nexth and int(mine) == nextm:
 				print('Market Noti' + str(nexth) +':'+str(nextm))
+				checkplaying = 1
 				voice = await client.join_voice_channel(voice_channel)
 				Nightplayer = voice.create_ffmpeg_player('market.m4a')
 				Nightplayer.start()
@@ -392,6 +436,7 @@ async def my_background_task():
 				Nightplayer.stop()
 				await voice.disconnect()
 				startlp = 1
+				checkplaying = 0
 
 
 
